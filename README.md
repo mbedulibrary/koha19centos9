@@ -5,7 +5,7 @@
   <li>Install AlmaLinux – Choose Server software package and select Basic Web in right column, Connect to Network, set time zone, make partitions as needed, set root password and create Admin user (koha) </li>
   <li>Update AlmaLinux – sudo dnf -y update</li>
   <li>Enable EPEL Repo – sudo dnf -y install epel-release</li>
-  <li>Enable CRB repo - dnf config-manager --set-enabled crb</li>
+  <li>Enable CRB repo - sudo dnf config-manager --set-enabled crb</li>
   <li>Update Install – sudo dnf -y update</li>
   <li>Create group koha and add koha (user) to koha and apache groups
     <ul>
