@@ -1,0 +1,19 @@
+###Change version to installed version (Currently libGraphicsMagick-Q16.so.3.20.0)
+---
+- name: Check if GraphicsMagick fixed pt1
+  stat: 
+   path: /usr/lib64/perl5/vendor_perl/auto/Graphics/Magick/Magick-0.so
+  register: stat_result1
+
+- name: Fix Graphics Magick Install
+  command: mv /usr/lib64/perl5/vendor_perl/auto/Graphics/Magick/Magick.so /usr/lib64/perl5/vendor_perl/auto/Graphics/Magick/Magick-0.so
+  when: stat_result1.stat.exists == False
+
+- name: Check if GraphicsMagick fixed pt2
+  stat: 
+   path: /usr/lib64/libGraphicsMagick-Q16.so.3.20.0
+  register: stat_result2
+
+- name: Fix Graphics Magick Install Pt 2
+  command: ld -share -o /usr/lib64/perl5/vendor_perl/auto/Graphics/Magick/Magick.so Magick.so `pwd`/usr/lib64/perl5/vendor_perl/auto/Graphics/Magick/Magick-0.so /usr/lib64/libGraphicsMagick-Q16.so.3.20.0
+  when: stat_result2.stat.exists == False

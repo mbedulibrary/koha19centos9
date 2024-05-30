@@ -1,0 +1,86 @@
+---
+
+# The following tasks are based on the instructions found at the following URLs:
+# http://wiki.koha-community.org/wiki/Koha_3.10_on_Centos_6.3_x86_64_en
+# http://bugs.koha-community.org/bugzilla3/buglist.cgi?bug_id=12549,15405
+
+# Download Koha and Unpack
+- name: Download Koha and Unpack
+  include: kohadownload.yml
+
+# Install Prerequisites
+- name: System Prerequisites
+  include: prereqdnf.yml
+
+# Download Zebra and Yaz - Install
+- name: zebra install
+  include: zebrayaz.yml
+
+# Install Perl Prerequisites
+- name: Install Perl Prerequisites
+  include: prereqperl.yml
+
+# Fix Graphics Magick
+# name: Fix Graphics Magick
+# include: graphicsmagick.yml
+
+# MySQL
+- name: Install MySQL server locally
+  include: mysql.yml
+
+# Webserver setup
+- name: Configure webserver for Koha
+  include: koha-webserver.yml
+
+# Configure httpd and firewalld
+- name: Configure Apache
+  include: apache.yml
+
+# Make the koha user own Zebra indices and dirs
+# Otherwise the zebraidx and zebrasrv services fail to start
+- file:
+    dest: "{{ item }}"
+    state: directory
+    owner: koha
+    recurse: yes
+  with_items:
+    - /var/lib/koha/zebradb/
+    - /var/lock/koha/zebradb/
+    - /var/run/koha/zebradb/
+
+#Fix Zebrasrv from zebrasrv-2.0 to zebrasrv
+- name: Fix zebrasrv.service
+  command: mv /usr/bin/zebrasrv-2.0 /usr/bin/zebrasrv
+
+#Fix Zebraidx from zebraidx-2.0 to zebraidx
+- name: Fix zebrasrv.service
+  command: mv /usr/bin/zebraidx-2.0 /usr/bin/zebraidx
+
+- name: Build Zebra indices
+  command: sudo -u koha ./rebuild_zebra.pl -b -a -r -v
+  args:
+    chdir: /usr/share/koha/bin/migration_tools/
+    creates: /var/lock/koha/zebradb/rebuild/rebuild..LCK
+
+#Open http
+- name: Open http
+  command: sudo firewall-cmd --zone=public --permanent --add-service=http
+  
+ #Open 8080
+- name: Open http
+  command: sudo firewall-cmd --zone=public --permanent --add-port 8080/tcp
+
+- name: Apply changes
+  command : sudo firewall-cmd --reload
+  
+- service:
+    name: "{{ item }}"
+    enabled: yes
+  when: start_at_boot == true
+  with_items:
+    - mariadb
+    - zebraidx
+    - zebrasrv
+    - httpd
+    - memcached
+

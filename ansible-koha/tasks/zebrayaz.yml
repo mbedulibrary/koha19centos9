@@ -1,0 +1,24 @@
+---
+  - name: zebra install
+    file: path=/home/koha/zebrayaz state=directory
+
+  - name: zebra
+    get_url: url=http://ftp.indexdata.dk/pub/zebra/redhat/centos/8/RPMS/x86_64/{{item}}  dest=/home/koha/zebrayaz/{{item}}
+    with_items:
+    - idzebra-2.0-2.1.4-1.indexdata.x86_64.rpm
+    - libidzebra-2.0-2.1.4-1.indexdata.x86_64.rpm
+    - libidzebra-2.0-modules-2.1.4-1.indexdata.x86_64.rpm
+    - libidzebra-2.0-devel-2.1.4-1.indexdata.x86_64.rpm
+
+  - name: yaz
+    get_url: url=http://ftp.indexdata.dk/pub/yaz/redhat/centos/8/RPMS/x86_64/{{item}}  dest=/home/koha/zebrayaz/{{item}}
+    with_items:
+    - libyaz5-5.30.1-1.indexdata.x86_64.rpm
+    - libyaz5-devel-5.30.1-1.indexdata.x86_64.rpm
+    - yaz-5.30.1-1.indexdata.x86_64.rpm
+
+  - name: install idzebra
+    become: true
+    dnf:
+     name: ['/home/koha/zebrayaz/idzebra-2.0-2.1.4-1.indexdata.x86_64.rpm','/home/koha/zebrayaz/libidzebra-2.0-2.1.4-1.indexdata.x86_64.rpm','/home/koha/zebrayaz/libidzebra-2.0-modules-2.1.4-1.indexdata.x86_64.rpm','/home/koha/zebrayaz/libidzebra-2.0-devel-2.1.4-1.indexdata.x86_64.rpm','/home/koha/zebrayaz/libyaz5-5.30.1-1.indexdata.x86_64.rpm','/home/koha/zebrayaz/libyaz5-devel-5.30.1-1.indexdata.x86_64.rpm','/home/koha/zebrayaz/yaz-5.30.1-1.indexdata.x86_64.rpm']
+     

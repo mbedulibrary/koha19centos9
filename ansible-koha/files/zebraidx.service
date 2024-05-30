@@ -1,0 +1,14 @@
+[Unit]
+Description=Zebra daemon for Koha
+Requires=mariadb.service
+After=mariadb.service
+
+[Service]
+Type=simple
+User=koha
+PermissionsStartOnly=true
+ExecStartPre=/usr/share/koha/bin/zebra-init.sh
+ExecStart=/usr/share/koha/bin/migration_tools/rebuild_zebra.pl -daemon -z -a -b
+
+[Install]
+WantedBy=multi-user.target

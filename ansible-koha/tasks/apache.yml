@@ -1,0 +1,17 @@
+---
+- name: Start Apache and Firewalld
+  become: true
+  shell: service {{ item }} restart
+  with_items:
+  - httpd
+  - firewalld
+
+# https://fedoraproject.org/wiki/Apache_HTTP_Server#Opening_firewall_ports
+- name: Open firewall ports for the webserver
+  become: true
+  firewalld: service=http permanent=true state=enabled immediate=true
+
+# https://fedoraproject.org/wiki/Apache_HTTP_Server#Opening_firewall_ports
+- name: Open SSL firewall ports for the webserver
+  become: true
+  firewalld: service=https permanent=true state=enabled immediate=true

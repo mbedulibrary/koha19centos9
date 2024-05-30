@@ -1,0 +1,15 @@
+---
+  - name: Check if koha already downloaded
+    stat: 
+     path: /home/koha/koha-19.11.04
+    register: stat_result
+
+  - name: Download and Extract Koha
+    unarchive:
+       src: http://download.koha-community.org/koha-latest.tar.gz
+       remote_src: yes
+       dest: /home/koha/
+    when: stat_result.stat.exists == False
+
+
+

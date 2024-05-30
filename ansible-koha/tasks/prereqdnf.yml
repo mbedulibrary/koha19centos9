@@ -1,0 +1,5 @@
+---
+  - name: install prereqs through dnf
+    become: true
+    dnf:
+     name: ['php','mariadb','mariadb-server','perl','python3-PyMySQL','cpanminus','ImageMagick','libxslt-devel','rpm-cron','memcached','tcl','libicu-devel','setools','gcc','GraphicsMagick-perl','libuuid-devel','fribidi-devel','bzip2-devel','perl-XML-Simple','gd-devel','perl-Module-Install']
