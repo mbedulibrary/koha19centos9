@@ -6,7 +6,7 @@
 
   - name: Download and Extract Koha
     unarchive:
-       src: http://download.koha-community.org/koha-latest.tar.gz
+       src: https://download.koha-community.org/old_releases/koha-19.11.04.tar.gz
        remote_src: yes
        dest: /home/koha/
     when: stat_result.stat.exists == False
